@@ -4,8 +4,10 @@ import com.jogdev.barbackend.bar.dto.ProductDto;
 import com.jogdev.barbackend.bar.persistence.entity.Product;
 import com.jogdev.barbackend.bar.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Product>> findAllProducts(Pageable pageable) {
+    public ResponseEntity<Page<Product>> findAllProducts(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "productName")
+            Pageable pageable) {
         Page<Product> productPage = productService.findAllProducts(pageable);
 
         return productPage.hasContent() ? ResponseEntity.ok(productPage)
@@ -28,7 +33,10 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<Product>> findAllProductsTrue(Pageable pageable) {
+    public ResponseEntity<Page<Product>> findAllProductsTrue(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "productName")
+            Pageable pageable) {
         Page<Product> productPage = productService.findAllProductsByProductStatusTrue(pageable);
 
         return productPage.hasContent() ? ResponseEntity.ok(productPage)

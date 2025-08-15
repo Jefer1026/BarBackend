@@ -8,8 +8,10 @@ import com.jogdev.barbackend.bar.persistence.repository.InventoryLocationReposit
 import com.jogdev.barbackend.bar.service.StockService;
 import com.jogdev.barbackend.bar.service.impl.InventoryService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,10 @@ public class StockController {
     private final InventoryLocationRepository inventoryLocationRepository;
 
     @GetMapping
-    public ResponseEntity<Page<ResponseStock>> getAllStocks(Pageable pageable) {
+    public ResponseEntity<Page<ResponseStock>> getAllStocks(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "id")
+            Pageable pageable) {
 
         Page<ResponseStock> stocksPage = stockService.getAllStocks(pageable);
 
