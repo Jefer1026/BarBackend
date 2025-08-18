@@ -5,14 +5,15 @@ import com.jogdev.barbackend.bar.dto.SaleItemRequest;
 import com.jogdev.barbackend.bar.persistence.entity.Invoice;
 import com.jogdev.barbackend.bar.service.SaleService;
 import com.jogdev.barbackend.bar.service.impl.SalesReportService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Parameter;
-
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,12 +27,12 @@ public class SaleController {
     private final SalesReportService salesReportService;
 
     @GetMapping
-    public ResponseEntity<Page<Invoice>> getAllSaleItems(Pageable pageable) {
+    public ResponseEntity<Page<Invoice>> getAllSaleItems(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "invoiceId")
+            Pageable pageable) {
 
         Page<Invoice> invoicePage = saleService.getAllInvoices(pageable);
-
-        System.out.println("lengt invoice =" + invoicePage.getTotalElements());
-
 
         return invoicePage.hasContent() ? ResponseEntity.ok().body(invoicePage) : ResponseEntity.notFound().build();
     }

@@ -38,7 +38,10 @@ public class StockController {
     }
 
     @GetMapping("/inventory-location")
-    public ResponseEntity<Page<InventoryLocation>> getAllInventoryLocation(Pageable pageable) {
+    public ResponseEntity<Page<InventoryLocation>> getAllInventoryLocation(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "id")
+            Pageable pageable) {
 
         Page<InventoryLocation> inventoryLocationPage = inventoryLocationRepository.findAll(pageable);
 
@@ -59,6 +62,7 @@ public class StockController {
 
         return ResponseEntity.status(HttpStatus.OK).body(stockService.updateStock(stockDto, stockId));
     }
+
 
     @PostMapping("/transfer")
     public ResponseEntity<String> transferStock(@RequestBody StockTransferRequest request) {

@@ -4,6 +4,7 @@ import com.jogdev.barbackend.bar.service.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,17 +42,26 @@ public class SecurityFilterConfig {
                             "/swagger-resources/**",
                             "/swagger-resources",
                             "/webjars/**").permitAll();
-                    auth.requestMatchers("/user").hasAuthority("user:read-all");
-                    auth.requestMatchers("/user/**").hasAuthority("user:write-by-id");
-                    auth.requestMatchers("/categories").hasAuthority("categories:read-all");
-                    auth.requestMatchers("/categories/**").hasAuthority("categories:read-by-id");
-                    auth.requestMatchers("/categories/**").hasAuthority("categories:write-by-id");
-                    auth.requestMatchers("/products").hasAuthority("products:read-all");
-                    auth.requestMatchers("/products/**").hasAuthority("products:read-by-id");
-                    auth.requestMatchers("/products/**").hasAuthority("products:write-by-id");
-                    auth.requestMatchers("/sales").hasAuthority("sales:read-all");
-                    auth.requestMatchers("/sales/**").hasAuthority("sales:read-by-id");
-                    auth.requestMatchers("/sales/**").hasAuthority("write:read-by-id");
+                    auth.requestMatchers("/user", "/user/**")
+                            .hasAnyAuthority("user:read-all", "user:write-by-id");
+
+                    auth.requestMatchers("/categories", "/categories/**")
+                            .hasAnyAuthority("categories:read-all", "categories:read-by-id", "categories:write-by-id");
+
+                    auth.requestMatchers("/products", "/products/**")
+                            .hasAnyAuthority("products:read-all", "products:read-by-id", "products:write-by-id");
+
+                    auth.requestMatchers("/sales", "/sales/**")
+                            .hasAnyAuthority("sales:read-all", "sales:read-by-id", "sales:write-by-id");
+
+                    auth.requestMatchers(HttpMethod.POST, "stock/","stock/inventory-location")
+                                    .hasRole("ADMIN");
+
+                    auth.requestMatchers("/stock", "/stock/**")
+                            .hasAnyAuthority("stock:read-all", "stock:read-by-id", "stock:write-by-id");
+
+
+
                     auth.anyRequest().authenticated();
 
                 })
