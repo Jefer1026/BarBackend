@@ -4,8 +4,10 @@ import com.jogdev.barbackend.bar.dto.CategoryDto;
 import com.jogdev.barbackend.bar.persistence.entity.Category;
 import com.jogdev.barbackend.bar.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,10 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Category>> findAllCategories(Pageable pageable) {
+    public ResponseEntity<Page<Category>> findAllCategories(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "categoryName")
+            Pageable pageable) {
         Page<Category> categoryPage = categoryService.findAllCategories(pageable);
 
         return categoryPage.hasContent() ? ResponseEntity.ok(categoryPage)
@@ -28,7 +33,10 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Category>> findAllCategoriesTrue(Pageable pageable) {
+    public ResponseEntity<Page<Category>> findAllCategoriesTrue(
+            @ParameterObject
+            @PageableDefault(size = 10, page = 0, sort = "categoryName")
+            Pageable pageable) {
         Page<Category> categoryPage = categoryService.findAllCategoriesStatusTrue(pageable);
 
         return categoryPage.hasContent() ? ResponseEntity.ok(categoryPage)

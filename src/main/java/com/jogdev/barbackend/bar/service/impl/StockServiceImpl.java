@@ -35,6 +35,7 @@ public class StockServiceImpl implements StockService {
         return stockRepository.findById(id);
     }
 
+
     @Override
     public Stock updateStock(StockDto stockDto, int stockId) {
         Stock stock = getStockById(stockId).orElseThrow(() -> new ObjectNotFoundException("Stock Not Found"));

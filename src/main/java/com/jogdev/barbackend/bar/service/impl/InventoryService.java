@@ -107,4 +107,6 @@ public class InventoryService {
         return inventoryLocationRepository.findAll(pageable);
     }
 
+
+
 }
