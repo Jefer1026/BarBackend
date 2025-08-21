@@ -10,6 +10,14 @@ DROP TABLE IF EXISTS `invoice`;
 DROP TABLE IF EXISTS `inventory_location`;
 DROP TABLE IF EXISTS `category`;
 
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `permission`;
+DROP TABLE IF EXISTS `granted_permission`;
+
+
+
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 DROP TABLE IF EXISTS `category`;
@@ -56,10 +64,6 @@ INSERT INTO `invoice` VALUES (1,'2025-07-22 16:35:19.020311',24000.00),(2,'2025-
 UNLOCK TABLES;
 
 
-
-
-
-DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `product_id` int NOT NULL AUTO_INCREMENT,
   `product_name` varchar(255) DEFAULT NULL,
@@ -71,16 +75,11 @@ CREATE TABLE `product` (
   CONSTRAINT `FK1mtsbur82frn64de7balymq9s` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
 LOCK TABLES `product` WRITE;
 INSERT INTO `product` VALUES (1,'POKER',6000.00,'ENABLED',1),(2,'CLUB',6000.00,'ENABLED',1),(3,'AGUILA',6000.00,'ENABLED',1),(4,'CORONA',10000.00,'ENABLED',1);
 UNLOCK TABLES;
 
 
-
-
-
-DROP TABLE IF EXISTS `stock`;
 CREATE TABLE `stock` (
   `id` int NOT NULL AUTO_INCREMENT,
   `creation_date` datetime DEFAULT NULL,
@@ -101,7 +100,7 @@ LOCK TABLES `stock` WRITE;
 INSERT INTO `stock` VALUES (1,'2025-07-22 16:26:48','2025-07-22 16:37:14',10,48,1,1),(2,'2025-07-22 16:27:06','2025-08-13 12:34:54',10,7,2,1),(3,'2025-07-22 16:27:54','2025-07-22 16:37:19',10,48,1,2),(4,'2025-07-22 16:28:10','2025-08-13 12:34:54',10,17,2,2);
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `invoice_detail`;
+
 
 CREATE TABLE `invoice_detail` (
   `invoice_detail_id` bigint NOT NULL AUTO_INCREMENT,
@@ -123,6 +122,68 @@ CREATE TABLE `invoice_detail` (
 LOCK TABLES `invoice_detail` WRITE;
 INSERT INTO `invoice_detail` VALUES (1,'POKER',2,12000.00,6000.00,1,1),(2,'CLUB',2,12000.00,6000.00,1,2),(3,'POKER',3,18000.00,6000.00,2,1),(4,'CLUB',5,30000.00,6000.00,2,2),(5,'POKER',3,18000.00,6000.00,3,1),(6,'POKER',5,30000.00,6000.00,3,1),(7,'POKER',7,42000.00,6000.00,4,1),(8,'POKER',1,6000.00,6000.00,4,1),(9,'POKER',2,12000.00,6000.00,5,1),(10,'CLUB',2,12000.00,6000.00,5,2);
 UNLOCK TABLES;
+
+
+
+
+CREATE TABLE `role` (
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `name` enum('ADMIN','SELLER','STOCK_MANAGER') DEFAULT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `role` WRITE;
+INSERT INTO `role` VALUES (1,'ADMIN'),(2,'STOCK_MANAGER'),(3,'SELLER');
+UNLOCK TABLES;
+
+
+CREATE TABLE `user` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `role_id` int DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `UKsb8bbouer5wak8vyiiy4pf2bx` (`username`),
+  KEY `FKn82ha3ccdebhokx3a8fgdqeyy` (`role_id`),
+  CONSTRAINT `FKn82ha3ccdebhokx3a8fgdqeyy` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+LOCK TABLES `user` WRITE;
+INSERT INTO `user` VALUES (1,'ADMIN','$2a$10$JzZuezgL9SOeidmjN1Fnl.RWvHomIa01otSUJK4IMg4ZSys05fhji','ADMIN',1);
+UNLOCK TABLES;
+
+
+
+CREATE TABLE `permission` (
+  `permission_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`permission_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `permission` WRITE;
+INSERT INTO `permission` VALUES (1,'user:read-all'),(2,'user:write-by-id'),(3,'categories:read-all'),(4,'categories:read-by-id'),(5,'categories:write-by-id'),(6,'products:read-all'),(7,'products:read-by-id'),(8,'products:write-by-id'),(9,'sales:read-all'),(10,'sales:read-by-id'),(11,'sales:write-by-id'),(12,'stock:read-all'),(13,'stock:read-by-id'),(14,'stock:write-by-id');
+UNLOCK TABLES;
+
+
+
+CREATE TABLE `granted_permission` (
+  `granted_permission_id` int NOT NULL AUTO_INCREMENT,
+  `permission_id` int DEFAULT NULL,
+  `role_id` int DEFAULT NULL,
+  PRIMARY KEY (`granted_permission_id`),
+  KEY `FKevk2nql3oc417rlr4mt8gsjpx` (`permission_id`),
+  KEY `FKm4v6hvxf7972y0liwhbfe7x6a` (`role_id`),
+  CONSTRAINT `FKevk2nql3oc417rlr4mt8gsjpx` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`permission_id`),
+  CONSTRAINT `FKm4v6hvxf7972y0liwhbfe7x6a` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+LOCK TABLES `granted_permission` WRITE;
+INSERT INTO `granted_permission` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,6,1),(7,7,1),(8,8,1),(9,9,1),(10,10,1),(11,11,1),(12,12,1),(13,13,1),(14,14,1),(15,12,2),(16,13,2),(17,14,2),(18,9,3),(19,10,3),(20,11,3);
+UNLOCK TABLES;
+
 
 
 DROP PROCEDURE IF EXISTS get_product_sales_report; 
