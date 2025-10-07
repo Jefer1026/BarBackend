@@ -79,6 +79,7 @@ public class SecurityFilterConfig {
                 "http://localhost:4200",
                 "https://jeferson-portfolio.netlify.app",
                 "https://jogdev.com",
+                "http://192.168.0.105:4200",
                 "https://api.jogdev.com",
                 "https://rickandmortyjog.netlify.app"));
         configuration.setAllowedMethods(Arrays.asList("*"));

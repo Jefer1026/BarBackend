@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setProductName(productDto.getProductName().toUpperCase());
         product.setProductPrice(productDto.getProductPrice());
+        product.setProductCost(productDto.getProductCost());
 
         Category category = new Category();
         category.setCategoryId(productDto.getCategoryId());
@@ -62,6 +63,7 @@ public class ProductServiceImpl implements ProductService {
         Product productFromDb = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
         productFromDb.setProductName(productDto.getProductName().toUpperCase());
         productFromDb.setProductPrice(productDto.getProductPrice());
+        productFromDb.setProductCost(productDto.getProductCost());
         Category category = new Category();
         category.setCategoryId(productDto.getCategoryId());
         productFromDb.setCategory(category);
