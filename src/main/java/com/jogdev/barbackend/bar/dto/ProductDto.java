@@ -18,5 +18,6 @@ public class ProductDto implements Serializable {
 
     private String productName;
     private BigDecimal productPrice;
+    private BigDecimal productCost;
     private Integer categoryId;
 }

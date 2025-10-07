@@ -22,9 +22,10 @@ public class CategoryController {
 
     @GetMapping("/all")
     public ResponseEntity<Page<Category>> findAllCategories(
-            @ParameterObject
-            @PageableDefault(size = 10, page = 0, sort = "categoryName")
-            Pageable pageable) {
+            @PageableDefault(size = 10, page = 0, sort = "categoryId")
+            @ParameterObject Pageable pageable) {
+
+
         Page<Category> categoryPage = categoryService.findAllCategories(pageable);
 
         return categoryPage.hasContent() ? ResponseEntity.ok(categoryPage)
@@ -35,12 +36,11 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<Page<Category>> findAllCategoriesTrue(
             @ParameterObject
-            @PageableDefault(size = 10, page = 0, sort = "categoryName")
+            @PageableDefault(size = 10, page = 0, sort = "categoryId")
             Pageable pageable) {
         Page<Category> categoryPage = categoryService.findAllCategoriesStatusTrue(pageable);
 
-        return categoryPage.hasContent() ? ResponseEntity.ok(categoryPage)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(categoryPage);
     }
 
 

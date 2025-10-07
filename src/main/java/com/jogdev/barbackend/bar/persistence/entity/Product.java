@@ -27,9 +27,17 @@ public class Product {
     @Column(name = "product_price")
     private BigDecimal productPrice;
 
+    @Column(name = "product_cost")
+    private BigDecimal productCost;
+
+
     @Enumerated(EnumType.STRING)
     @Column(name = "product_status")
     private StatusObject productStatus;
+
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")

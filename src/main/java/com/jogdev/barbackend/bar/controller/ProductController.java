@@ -21,9 +21,8 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<Page<Product>> findAllProducts(
-            @ParameterObject
-            @PageableDefault(size = 10, page = 0, sort = "productName")
-            Pageable pageable) {
+            @PageableDefault(size = 10, page = 0, sort = "productId")
+            @ParameterObject Pageable pageable) {
         Page<Product> productPage = productService.findAllProducts(pageable);
 
         return productPage.hasContent() ? ResponseEntity.ok(productPage)
@@ -34,9 +33,8 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity<Page<Product>> findAllProductsTrue(
-            @ParameterObject
-            @PageableDefault(size = 10, page = 0, sort = "productName")
-            Pageable pageable) {
+            @PageableDefault(size = 10, page = 0, sort = "productId")
+            @ParameterObject Pageable pageable) {
         Page<Product> productPage = productService.findAllProductsByProductStatusTrue(pageable);
 
         return productPage.hasContent() ? ResponseEntity.ok(productPage)

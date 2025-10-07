@@ -35,7 +35,10 @@ public class SecurityFilterConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> {
+                .authorizeHttpRequests( auth -> {
+                    auth.anyRequest().permitAll();
+                })
+                /*.authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/authentication/**",
                             "/swagger-ui/**",
                             "/v3/api-docs/**",
@@ -64,7 +67,7 @@ public class SecurityFilterConfig {
 
                     auth.anyRequest().authenticated();
 
-                })
+                })*/
                 .exceptionHandling(exception -> {
                     exception.authenticationEntryPoint(authenticationEntryPoint);
                     exception.accessDeniedHandler(accessDeniedHandler);
@@ -79,6 +82,7 @@ public class SecurityFilterConfig {
                 "http://localhost:4200",
                 "https://jeferson-portfolio.netlify.app",
                 "https://jogdev.com",
+                "http://192.168.0.105:4200",
                 "https://api.jogdev.com",
                 "https://rickandmortyjog.netlify.app"));
         configuration.setAllowedMethods(Arrays.asList("*"));

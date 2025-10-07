@@ -1,6 +1,7 @@
 package com.jogdev.barbackend.bar.service;
 
 import com.jogdev.barbackend.bar.dto.CategoryDto;
+import com.jogdev.barbackend.bar.dto.MyPageable;
 import com.jogdev.barbackend.bar.persistence.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
