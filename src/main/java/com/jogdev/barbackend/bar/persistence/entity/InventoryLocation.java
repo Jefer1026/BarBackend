@@ -1,5 +1,6 @@
 package com.jogdev.barbackend.bar.persistence.entity;
 
+import com.jogdev.barbackend.util.StatusObject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,9 @@ public class InventoryLocation {
     @Column(name = "location_id")
     private int id;
     private String locationName;
+
+    @Enumerated(EnumType.STRING)
+    private StatusObject status;
+
 
 }

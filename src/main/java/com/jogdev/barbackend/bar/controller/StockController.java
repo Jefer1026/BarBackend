@@ -7,6 +7,7 @@ import com.jogdev.barbackend.bar.persistence.entity.Stock;
 import com.jogdev.barbackend.bar.persistence.repository.InventoryLocationRepository;
 import com.jogdev.barbackend.bar.service.StockService;
 import com.jogdev.barbackend.bar.service.impl.InventoryService;
+import com.jogdev.barbackend.util.StatusObject;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -43,10 +44,12 @@ public class StockController {
             @PageableDefault(size = 10, page = 0, sort = "id")
             Pageable pageable) {
 
-        Page<InventoryLocation> inventoryLocationPage = inventoryLocationRepository.findAll(pageable);
+        Page<InventoryLocation> inventoryLocationPage = inventoryService.findInventoryLocationByStatus(StatusObject.ENABLED, pageable);
 
         return inventoryLocationPage.hasContent() ? ResponseEntity.ok(inventoryLocationPage) : ResponseEntity.notFound().build();
     }
+
+
 
     @GetMapping("/{stockById}")
     public ResponseEntity<Stock> getStockById(@PathVariable int stockById) {

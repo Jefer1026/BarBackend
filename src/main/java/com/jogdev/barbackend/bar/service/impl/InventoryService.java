@@ -8,10 +8,12 @@ import com.jogdev.barbackend.bar.persistence.entity.Stock;
 import com.jogdev.barbackend.bar.persistence.repository.InventoryLocationRepository;
 import com.jogdev.barbackend.bar.persistence.repository.ProductRepository;
 import com.jogdev.barbackend.bar.persistence.repository.StockRepository;
+import com.jogdev.barbackend.util.StatusObject;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,13 +101,39 @@ public class InventoryService {
 
         InventoryLocation inventoryLocation = new InventoryLocation();
         inventoryLocation.setLocationName(inventoryLocationDto.getLocationName().toUpperCase());
+        inventoryLocation.setStatus(StatusObject.ENABLED);
 
         return inventoryLocationRepository.save(inventoryLocation);
     }
 
+    public InventoryLocation updateInventoryLocation(InventoryLocationDto inventoryLocationDto, int locationId) {
+        InventoryLocation inventoryLocation = inventoryLocationRepository.findById(locationId)
+                .orElseThrow(() -> new ObjectNotFoundException("location not found"));
+        inventoryLocation.setLocationName(inventoryLocationDto.getLocationName().toUpperCase());
+        return inventoryLocationRepository.save(inventoryLocation);
+    }
+
+    public InventoryLocation disableInventoryLocation(int locationId) {
+        InventoryLocation inventoryLocation = inventoryLocationRepository.findById(locationId)
+                .orElseThrow(() -> new ObjectNotFoundException("location not found"));
+        inventoryLocation.setStatus(StatusObject.DISABLED);
+        return inventoryLocationRepository.save(inventoryLocation);
+
+    }
+    public Page<InventoryLocation> findInventoryLocationByStatus(StatusObject status, Pageable pageable) {
+        return inventoryLocationRepository.findInventoryLocationByStatusIs(status, pageable);
+    }
+
+
+
     public Page<InventoryLocation> getAllInventoryLocations(Pageable pageable) {
         return inventoryLocationRepository.findAll(pageable);
     }
+
+
+
+
+
 
 
 
