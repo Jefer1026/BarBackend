@@ -62,7 +62,7 @@ public class StockServiceImpl implements StockService {
 
 
         InventoryLocation location = inventoryLocationRepository
-                .findInventoryLocationByLocationName(request.getLocationCode())
+                .findById(request.getLocationCode())
                 .orElseThrow(() -> new RuntimeException("Ubicación no encontrada"));
 
         System.out.println("Location: " + location.getLocationName());

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class CreateStockRequest {
     private int productId;
-    private String locationCode;
+    private int locationCode;
     private Integer quantity;
     private Integer minQuantity;
 }
